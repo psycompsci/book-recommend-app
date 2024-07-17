@@ -12,18 +12,25 @@ models.Base.metadata.create_all(bind=engine)
 async def read_root():
     return {"message": "Hello World"}
 
-class ItemBase(BaseModel):
+"""class ItemBase(BaseModel):
     title: str
     price: float
-    user_id: int
+    user_id: int"""
 
 class UserBase(BaseModel):
     username: str
 
+class BookBase(BaseModel):
+    title: str
+    author: str
+    year: int
+
+'''
 class RatingBase(BaseModel):
     id: int
     isbn: str
     rating: int
+'''
 
 # create dependency to get the database session
 def get_db():
@@ -48,3 +55,10 @@ async def read_user(user_id: int, db: db_dependency):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+@app.get("/books/{book_isbn}", status_code=status.HTTP_200_OK)
+async def read_book(book_isbn: str, db: db_dependency):
+    book = db.query(models.Book).filter(models.Book.isbn == book_isbn).first()
+    if book is None:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return book
