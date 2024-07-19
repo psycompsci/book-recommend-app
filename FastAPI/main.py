@@ -4,9 +4,20 @@ from typing import Annotated
 import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
+
+# implement CORS origins; React on localhost port 3000
+origins = [
+    'http://localhost:3000'
+]
+
+app.add_middleware(
+    CORSMiddleware, 
+    allow_origins=origins,
+)
 
 @app.get("/")
 async def read_root():
@@ -17,6 +28,8 @@ async def read_root():
     price: float
     user_id: int"""
 
+
+#pydantic models
 class UserBase(BaseModel):
     username: str
 
@@ -45,7 +58,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 @app.post("/users/", status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserBase, db: db_dependency):
-    db_user = models.User(**user.dict()) #deserialize? the user object --> 
+    db_user = models.User(**user.dict()) #deserialize? the user object
     db.add(db_user)
     db.commit()
 
