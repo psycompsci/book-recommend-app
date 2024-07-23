@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+// {useState, useEffect} --> React "hooks" that allow us to call API endpoints
+import React, {useState, useEffect} from 'react' ;
+import api from './api';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+  const [books, setBooks] = useState([]);
+  const [formData, setFormData] = useState({
+    isbn: '',
+    title: '',
+    author: ''
+  });
+
+  const fetchBooks = async () => {
+    const result = await api.get('/books/');
+    setBooks(result.data);
+  }
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const handleInputChange = (event) => {
+    // const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    setFormData({
+      ...formData, 
+      [event.target.name]: event.target.value
+    });
+  }
+
+  const handleFormSubmit = async(event) => {
+    event.preventDefault();
+    await api.post('/books/', formData);
+    fetchBooks();
+    setFormData({
+      isbn: '', 
+      title: '', 
+      author: ''
+    });
+  };
+
 }
 
 export default App;
