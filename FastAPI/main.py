@@ -11,12 +11,15 @@ models.Base.metadata.create_all(bind=engine)
 
 # implement CORS origins; React on localhost port 3000
 origins = [
-    'http://localhost:3000'
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
     CORSMiddleware, 
     allow_origins=origins,
+    allow_credentials=True, 
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")
@@ -35,8 +38,8 @@ class UserBase(BaseModel):
 
 class BookBase(BaseModel):
     title: str
-    author: str
-    year: int
+    authors: str
+    original_publication_year: float
 
 '''
 class RatingBase(BaseModel):
@@ -69,9 +72,9 @@ async def read_user(user_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@app.get("/books/{book_isbn}", status_code=status.HTTP_200_OK)
-async def read_book(book_isbn: str, db: db_dependency):
-    book = db.query(models.Book).filter(models.Book.isbn == book_isbn).first()
+@app.get("/books/{book_id}", status_code=status.HTTP_200_OK)
+async def read_book(book_id: int, db: db_dependency):
+    book = db.query(models.Book).filter(models.Book.book_id == book_id).first()
     if book is None:
         raise HTTPException(status_code=404, detail="Book not found")
     return book

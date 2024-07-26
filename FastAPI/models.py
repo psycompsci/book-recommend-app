@@ -10,10 +10,10 @@ class User(Base):
 class Book(Base):
     __tablename__ = 'books'
 
-    isbn = Column(String(20), primary_key=True, index=True)
+    book_id = Column(Integer, primary_key=True, index=True)
     title = Column(String(150))
-    author = Column(String(100))
-    year = Column(String(4))
+    authors = Column(String(100))
+    original_publication_year = Column(String(10))
 
 
 """class Item(Base):
