@@ -12,8 +12,9 @@ class Book(Base):
 
     book_id = Column(Integer, primary_key=True, index=True)
     title = Column(String(150))
-    authors = Column(String(100))
-    original_publication_year = Column(String(10))
+    authors = Column(String(750))
+    original_publication_year = Column(Float)
+    average_rating = Column(Float)
 
 
 """class Item(Base):
