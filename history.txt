@@ -1,0 +1,65 @@
+NECESSARY DOWNLOADS/INSTALLATIONS
+- EXTENSTIONS: SQLTools (for MySQL database connection), GitHub CoPilot (optional)
+- TERMINAL: 
+    - pymysql
+    - sqlalchemy
+    - mysql_server 
+    - csvkit: pip install csvkit
+    - fastapi
+    - mysql
+    - react
+        - nodejs
+        - npm
+
+START APPLICATION
+#1. FastAPI & MySQL
+ - Make FastAPI port 8000 public
+    - One Way: go to Visibility column under Ports tab; right-click on Private next to port 8000 and select Port Visibility and then change to public
+    - Other way: wait to run the fastapi command and then if there is popup for opening browser, see if it also has option to Make Public and click on that
+sudo service mysql start
+cd FastAPI
+fastapi dev main.py
+
+#2. React
+cd React/book-app/
+npm start
+______________________________________________
+DATASET CLEANING
+#1. pip install csvkit
+#2. csvcut -C 1,2,5,10,16,18-25,27-30 books_enriched.csv > books_shelf.csv
+______________________________________________
+SQL QUERY - DATABASE SETUP
+create table books (
+    authors varchar(1000),
+    average_rating float,
+    book_id int primary key,
+    books_count int,
+    book_desc varchar(7000),
+    genres varchar(500),
+    image_url varchar(255),
+    isbn varchar(15),
+    isbn13 float,
+    language_code varchar(10),
+    original_publication_year float,
+    pages int,
+    title varchar(255)
+);
+______________________________________________
+INSERTING DATASET FROM CSV INTO MySQL DATABASE
+#1. go to file mysql-connect.py --> make sure table name and csv file name are correct
+#2. Terminal: python3 mysql-connect.py
+#3. check if data is inserted in MySQL using: SELECT * FROM books;
+______________________________________________
+OTHER SQL QUERIES:
+# for changing the length of varchar / for changing the type of a column
+ALTER TABLE [table_name] 
+MODIFY COLUMN [column] varchar([new_length]);
+# for adding a column
+ALTER TABLE [table]
+ADD [column_name] [type];
+# to delete table or column or schema
+DROP [table/column/schema] [name];
+# to clear the table but not delete it
+TRUNCATE table [name];
+
+

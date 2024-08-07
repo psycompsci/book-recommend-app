@@ -35,12 +35,21 @@ class BookBase(BaseModel):
     authors: str
     original_publication_year: float
     average_rating: float
+    image_url: str
+    book_desc: str
+    genres: str
+    isbn: int
+    isbn13: float
+    language_code: str
+    pages: int
+    books_count: int
+    
 
 class BookModel(BookBase):
     book_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # create dependency to get the database session
@@ -73,19 +82,10 @@ async def read_user(user_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@app.post("/books/", response_model=BookModel)
-async def create_book(book: BookBase, db: db_dependency):
-    db_book = models.Book(**book.dict())
-    db.add(db_book)
-    db.commit()
-    db.refresh(db_book)
-    return db_book
 
 @app.get("/books", response_model=List[BookModel])
-async def read_books(db: db_dependency):
-    books = db.query(models.Book).all()
-    if books is None:
-        raise HTTPException(status_code=404, detail="Books not found")
+async def read_books(db: db_dependency):        #, skip: int=0, limit: int=10):
+    books = db.query(models.Book).all()         #offset(skip).limit(limit).all()
     return books
 
 # for searching by book-id
