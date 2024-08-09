@@ -1,15 +1,54 @@
 NECESSARY DOWNLOADS/INSTALLATIONS
 - EXTENSTIONS: SQLTools (for MySQL database connection), GitHub CoPilot (optional)
 - TERMINAL: 
-    - pymysql
-    - sqlalchemy
-    - mysql_server 
+    - sudo apt-get update
+    - pymysql, sqlalchemy: pip install pymysql sqlalchemy
+    - mysql-server --> sudo apt-get install mysql-server (might need to be root user)
     - csvkit: pip install csvkit
-    - fastapi
-    - mysql
+    - fastapi: pip install fastapi // OR // pip install "fastapi[standard]"
     - react
-        - nodejs
-        - npm
+        - nodejs, npm: sudo apt install nodejs npm
+        - created react app with npx create-react-app book-app
+        - npm install axios (for fastapi connection)
+
+SETUP MySQL DATABASE
+#1. MySQL 
+Terminal
+    sudo service start mysql
+    sudo su
+    mysql -u root
+Inside MySQL: 
+    > CREATE USER 'sqluser' 
+    > IDENTIFIED WITH mysql_native_password BY 'password';
+
+    > GRANT ALL PRIVILEGES ON *.* TO 'sqluser';
+
+    > FLUSH PRIVILEGES;
+
+    > \q 
+
+(creating new database which will be used inside testconnection)
+Terminal
+    mysql -u sqluser -p
+    -> Enter password when prompted
+Inside mysql: 
+    > SHOW DATABASES;
+    > CREATE DATABASE testdb;
+    > SHOW DATABASES;
+    > \q
+// SHOW DATABASES; allows us to make sure that our database is created 
+Terminal
+    exit 
+// exit superuser/root with exit
+
+Go to SQLTools and start a new connection:
+    - Connection name: testconnection
+    - keep default settings for Connect using (Server and Port), Server Address (localhost), and Port (3306)
+    - Database: testdb
+    - Username: sqluser
+    - Password mode: Save as plaintext in settings
+    - Password: password
+    Test Connection, then if successful, Save Connection and move on to Connect Now
 
 START APPLICATION
 #1. FastAPI & MySQL
@@ -37,7 +76,7 @@ create table books (
     book_desc varchar(7000),
     genres varchar(500),
     image_url varchar(255),
-    isbn varchar(15),
+    isbn int,
     isbn13 float,
     language_code varchar(10),
     original_publication_year float,
@@ -61,5 +100,4 @@ ADD [column_name] [type];
 DROP [table/column/schema] [name];
 # to clear the table but not delete it
 TRUNCATE table [name];
-
 
