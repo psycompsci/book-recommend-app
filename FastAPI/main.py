@@ -28,6 +28,7 @@ app.add_middleware(
 #pydantic models
 class UserBase(BaseModel):
     username: str
+    password: str
 
 class BookBase(BaseModel):
     book_id: int
