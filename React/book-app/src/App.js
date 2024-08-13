@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
+import Register from './pages/Register';
 import api from './api';
 
 function App() {
@@ -15,6 +16,9 @@ function App() {
             break;
         case "/signin":
             Component = SignIn;
+            break;
+        case"/register":
+            Component = Register;
             break;
         default:
             Component = Home; // Default to Home if the path doesn't match
@@ -30,6 +34,38 @@ function App() {
 }
 
 export default App;
+/*
+import React from 'react';
+import Navbar from './Navbar';
+import Home from './pages/Home';
+import SignIn from './pages/SignIn';
+
+function App() {
+    let Component;
+    
+    switch (window.location.pathname) {
+        case "/":
+        case "/signin": // Set both "/" and "/signin" to load the SignIn component
+            Component = SignIn;
+            break;
+        case "/home":
+            Component = Home;
+            break;
+        default:
+            Component = SignIn; // Default to SignIn if the path doesn't match
+            break;
+    }
+
+    return (
+        <>
+            <Navbar />
+            <Component />
+        </>
+    );
+}
+
+export default App;
+*/
 
 // export default function App() {
 //   const [books, setBooks] = useState([]);
