@@ -39,7 +39,7 @@ class BookBase(BaseModel):
     image_url: str
     book_desc: str
     genres: str
-    isbn: int
+    isbn: str
     isbn13: float
     language_code: str
     pages: int
@@ -85,8 +85,8 @@ async def read_user(user_id: int, db: db_dependency):
 
 
 @app.get("/books", response_model=List[BookModel])
-async def read_books(db: db_dependency):        #, skip: int=0, limit: int=10):
-    books = db.query(models.Book).all()         #offset(skip).limit(limit).all()
+async def read_books(db: db_dependency, skip: int=0, limit: int=10):
+    books = db.query(models.Book).offset(skip).limit(limit).all()
     return books
 
 # for searching by book-id

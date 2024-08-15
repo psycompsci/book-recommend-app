@@ -19,7 +19,7 @@ class Book(Base):
     image_url = Column(String(255))
     book_desc = Column(String(7000))
     genres = Column(String(500))
-    isbn = Column(Integer, unique=True)
+    isbn = Column(String(15), unique=True)
     isbn13 = Column(Float, unique=True)
     language_code = Column(String(10))
     pages = Column(Integer)

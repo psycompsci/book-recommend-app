@@ -1,4 +1,5 @@
 import pandas as pd
+
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.neighbors import NearestNeighbors
 # using cosine similarity for measuring similarity between books => use of NearestNeighbors
@@ -6,7 +7,7 @@ from sklearn.neighbors import NearestNeighbors
 # Read the data and instantiate object to represent the data
 #ratings = pd.read_csv('Ratings.csv')
 #users = pd.read_csv('Users.csv')
-books = pd.read_csv('Sample_new.csv')
+books = pd.read_csv('books_shelf.csv')
 
 # Drop duplicates and missing values
 #ratings.drop_duplicates(inplace=True)
@@ -16,25 +17,36 @@ books = pd.read_csv('Sample_new.csv')
 books.drop_duplicates(inplace=True)
 books.dropna(inplace=True)
 
-# extract authors columns
-# first line of Books.csv: ISBN,Book-Title,Book-Author,Year-Of-Publication,Publisher,Image-URL-S,Image-URL-M,Image-URL-L
-# first line of Ratings.csv: User-ID,ISBN,Book-Rating
-# first line of Users.csv: User-ID,Location,Age
-ratings = books['average_rating']
-encoder = OneHotEncoder()
-ratings_encoded = encoder.fit_transform(ratings.values.reshape(-1, 1))
+# extract genres columns
+genres = books['genres']
+# instantiate OneHotEncoder object
+encoder = OneHotEncoder() 
+# fit and transform genres column
+genres_encoded = encoder.fit_transform(genres.values.reshape(-1, 1))
 
 # instantiate NearestNeighbors object
 recommender = NearestNeighbors(metric='cosine')
 
-# git authors to recommender
-recommender.fit(ratings_encoded.toarray())
-
-book_index = 0
-num_recommendations = 3
+# get genres to recommender
+recommender.fit(genres_encoded.toarray())
 
 # Getting the recommendations
-_, recommendations = recommender.kneighbors(ratings_encoded[book_index].toarray(), n_neighbors=num_recommendations)
+num_recommendations = 10
+while(True):
+    print("-----------------------------")
+    print("Enter book ID: ")
+    book_id = int(input())
+    try:
+        _, recommendations = recommender.kneighbors(genres_encoded[book_id].toarray(), n_neighbors=num_recommendations)
 
-# Extracting the book titles from the recommendations
-recommended_book_titles = books.iloc[recommendations[0]]['title']
+        
+        # Extracting the book titles from the recommendations
+        recommended_book_titles = books.iloc[recommendations[0]]['title']
+
+        print("Recommended Books:")
+        print(recommended_book_titles)
+
+    except IndexError:
+        print("Book ID not found.")
+
+# can't find books after book id 9179 and -9180
